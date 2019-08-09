@@ -5,6 +5,9 @@ RUN apt-get update && apt-get install -y gettext-base && \
     rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/src/app
+
+ADD . /usr/src/app
+
 WORKDIR /usr/src/app
 
 RUN rm -rf node_modules
