@@ -61,7 +61,8 @@
                   "maximumError": "10kb"
                 }
               ]
-            }
+            },
+            "dev": {}
           }
         },
         "serve": {
@@ -72,7 +73,8 @@
           "configurations": {
             "production": {
               "browserTarget": "angular-quickstart-v8:build:production"
-            }
+            },
+            "dev": {}
           }
         },
         "extract-i18n": {

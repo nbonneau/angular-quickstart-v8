@@ -29,7 +29,7 @@ export interface WaitRequest {
 }
 
 export interface HttpApiConfig {
-    baseUrl?: string;
+    host?: string;
     wait?: boolean;
     retry?: {
         attemps?: number;
@@ -78,8 +78,8 @@ export class HttpService {
         return this.request(HttpService.METHOD_DELETE, url, params, opts);
     }
 
-    getFullpath(path: string, baseUrl?: string): string {
-        return (baseUrl || this.config.baseUrl || 'http://localhost') + path;
+    getFullpath(path: string, host?: string): string {
+        return (host || this.config.host || 'http://localhost') + path;
     }
 
     handleError(error: HttpErrorResponse): void {
@@ -98,12 +98,12 @@ export class HttpService {
 
         opts = extend(true, this.config, opts);
 
-        let req = this._getRequestObservable(method, url, params, opts.baseUrl, opts.timeout);
+        let req = this._getRequestObservable(method, url, params, opts.host, opts.timeout);
 
         if (opts.wait) {
             req = this._waitRequest(this._addWaitRequest(method, url, params, opts));
         } else if (opts.retry) {
-            req = this._retryRequest(this._getRequestObservable(method, url, params, opts.baseUrl, opts.timeout), opts);
+            req = this._retryRequest(this._getRequestObservable(method, url, params, opts.host, opts.timeout), opts);
         }
 
         return req.pipe(tap(() => {
@@ -134,10 +134,10 @@ export class HttpService {
 
         const responseSubject = new Subject();
 
-        let requestObservable = this._getRequestObservable(method, url, params, opts.baseUrl, opts.timeout);
+        let requestObservable = this._getRequestObservable(method, url, params, opts.host, opts.timeout);
 
         if (opts.retry) {
-            requestObservable = this._retryRequest(this._getRequestObservable(method, url, params, opts.baseUrl, opts.timeout), opts);
+            requestObservable = this._retryRequest(this._getRequestObservable(method, url, params, opts.host, opts.timeout), opts);
         }
 
         const config = {
@@ -197,8 +197,8 @@ export class HttpService {
         ));
     }
 
-    protected _getRequestObservable(method: string, path: string, params?: any, baseUrl?: string, timeo?: number): Observable<any> {
-        return this.http[method.toLowerCase()](this.getFullpath(path, baseUrl), params).pipe(timeout(timeo));
+    protected _getRequestObservable(method: string, path: string, params?: any, host?: string, timeo?: number): Observable<any> {
+        return this.http[method.toLowerCase()](this.getFullpath(path, host), params).pipe(timeout(timeo));
     }
 
 }
