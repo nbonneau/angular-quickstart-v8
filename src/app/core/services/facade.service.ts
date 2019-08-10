@@ -2,11 +2,21 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpService } from './http.service';
 import { OfflineService } from './offline.service';
 import { SharedEventService } from './shared.service';
+import { EndpointUserService } from '../endpoints/endpoint-user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FacadeService {
+
+  // tslint:disable-next-line: variable-name
+  private __userEndpointService: EndpointUserService;
+  get userEndpointService(): EndpointUserService {
+    if (!this.__userEndpointService) {
+      this.__userEndpointService = this.injector.get(EndpointUserService);
+    }
+    return this.__userEndpointService;
+  }
 
   // tslint:disable-next-line: variable-name
   private __httpService: HttpService;

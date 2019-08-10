@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+import { environment } from '../../../../environments/environment';
+import { User } from '../../models/user.model';
+import { FacadeService } from '../../services/facade.service';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -7,9 +11,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  env = environment.env;
+  user: User;
+
+  constructor(public facade: FacadeService) { }
 
   ngOnInit() {
+    this.facade.userEndpointService.get().subscribe((user) => this.user = user);
   }
 
 }

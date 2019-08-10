@@ -3,23 +3,11 @@ import { Observable, Subject, of, throwError, TimeoutError } from 'rxjs';
 import { tap, catchError, retryWhen, concatMap, delay, timeout } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
+import { HTTP_DEFAULT_CONFIG } from '../../app.constants';
+
 import * as extend from 'extend';
 
-export const HTTP_CONFIG: InjectionToken<HttpApiConfig> = new InjectionToken<HttpApiConfig>('HttpApiConfig');
-
-export const HTTP_DEFAULT_CONFIG = {
-    wait: true,
-    retry: {
-        attemps: 1,
-        delay: 500,
-        statuses: [
-            502,
-            504,
-            0
-        ]
-    },
-    timeout: 60000
-};
+import { environment } from 'src/environments/environment';
 
 export interface WaitRequest {
     pending: boolean;
@@ -38,6 +26,11 @@ export interface HttpApiConfig {
     };
     timeout?: number;
 }
+
+export const HTTP_CONFIG: InjectionToken<HttpApiConfig> = new InjectionToken<HttpApiConfig>('HttpApiConfig', {
+    providedIn: 'root',
+    factory: () => environment.api
+});
 
 @Injectable({
     providedIn: 'root'
@@ -79,7 +72,7 @@ export class HttpService {
     }
 
     getFullpath(path: string, host?: string): string {
-        return (host || this.config.host || 'http://localhost') + path;
+        return (host || this.config.host || 'http://localhost:4200/assets/mocks') + path;
     }
 
     handleError(error: HttpErrorResponse): void {
