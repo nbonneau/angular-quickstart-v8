@@ -1,5 +1,5 @@
 export const HTTP_DEFAULT_CONFIG = {
-    wait: true,
+    shared: true,
     retry: {
         attemps: 1,
         delay: 500,
@@ -10,4 +10,13 @@ export const HTTP_DEFAULT_CONFIG = {
         ]
     },
     timeout: 60000
+};
+
+export const AUTH_DEFAULT_CONFIG = {
+    authRedirectUrl: '/',
+    unauthRedirectUrl: '/login',
+    authKey: 'auth_provider',
+    tokenKey: 'auth_token',
+    tokenType: 'Bearer',
+    providers: []
 };

@@ -1,7 +1,16 @@
-<div>
-  <h1>Angular quickstart v8</h1>
-  <ul>
-    <li>Env: {{ env }}</li>
-    <li>User: {{ user?.username }}</li>
-  </ul>
+<div class="container m-32-t">
+  <mat-card>
+    <mat-card-title>Welcome to Angular-quickstart-v8</mat-card-title>
+    <mat-card-subtitle>{{ date | date }} | user: {{ user?.username }} <a mat-button color="primary"
+        (click)="logout()">logout</a></mat-card-subtitle>
+    <div class="p-32">
+      <p>
+        theme:
+      </p>
+      <div fxLayout fxLayoutGap="16px">
+        <button mat-raised-button color="primary">Primary</button>
+        <button mat-raised-button color="accent">Accent</button>
+      </div>
+    </div>
+  </mat-card>
 </div>

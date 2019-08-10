@@ -1,0 +1,23 @@
+{
+  "swagger": "2.0",
+  "host": "petstore.swagger.io",
+  "basePath": "/1.0.0",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/user": {
+      "get": {
+        "summary": "Get current user",
+        "description": "",
+        "operationId": "getUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  }
+}

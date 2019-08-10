@@ -1,1 +1,27 @@
-<router-outlet></router-outlet>
+<!-- Initialized template -->
+<div *ngIf="initialized; else uninitializedTemplate">
+
+    <!-- Router -->
+    <router-outlet></router-outlet>
+
+    <!-- Global loading -->
+    <div *ngIf="loading">
+        <ng-container *ngTemplateOutlet="loadingTemplate"></ng-container>
+    </div>
+
+</div>
+
+<!--==========================================================================-->
+
+<!-- Uninitialized template -->
+<ng-template #uninitializedTemplate>
+    <ng-container *ngTemplateOutlet="loadingTemplate"></ng-container>
+</ng-template>
+
+<!-- Loading template -->
+<ng-template #loadingTemplate>
+    <div fxFill fxLayoutAlign="center center" class="position-fixed z-1200 background-body">
+        <!-- Spinner -->
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>

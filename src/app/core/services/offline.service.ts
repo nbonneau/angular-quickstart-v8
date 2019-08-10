@@ -10,7 +10,7 @@ export class OfflineService {
     private onlineSubject: BehaviorSubject<boolean> = new BehaviorSubject(window.navigator.onLine);
     private stateSubject: BehaviorSubject<string> = new BehaviorSubject(window.navigator.onLine ? 'online' : 'offline');
 
-    state: string;
+    state: string = window.navigator.onLine ? 'online' : 'offline';
 
     get offline(): Observable<boolean> {
         return this.offlineSubject.asObservable();
@@ -47,4 +47,11 @@ export class OfflineService {
         });
     }
 
+    initialize() {
+        return new Observable(obs => {
+            this.state = window.navigator.onLine ? 'online' : 'offline';
+            obs.next();
+            obs.complete();
+        });
+    }
 }

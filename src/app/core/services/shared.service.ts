@@ -7,43 +7,43 @@ import { take } from 'rxjs/operators';
 })
 export class SharedEventService {
 
-    private subjects: { [key: string]: BehaviorSubject<any> } = {};
+    subjects: { [key: string]: BehaviorSubject<any> } = {};
 
     emit<T>(key: string, data: T): Observable<T> {
-        this.getSubject<T>(key).next(data);
+        this.subjectOf<T>(key).next(data);
         return this.on<T>(key);
     }
 
-    on<T>(key: string): Observable<T> {
-        return this.getSubject<T>(key).asObservable();
+    on<T>(key: string, data?: any): Observable<T> {
+        return this.subjectOf<T>(key, data).asObservable();
     }
 
-    once<T>(key: string): Observable<T> {
-        return this.getSubject<T>(key).asObservable()
+    once<T>(key: string, data?: any): Observable<T> {
+        return this.subjectOf<T>(key, data).asObservable()
             .pipe(take(1));
     }
 
     hasEvent(key: string): boolean {
-        return !!this.getSubject(key);
+        return !!this.subjects[key];
     }
 
-    valueOf<T>(key: string): T {
+    valueOf<T>(key: string, value?: any): T {
         if (!this.hasEvent(key)) {
             return undefined;
         }
-        return this.getSubject<T>(key).value;
+        return this.subjectOf<T>(key, value).value;
     }
 
-    getSubject<T>(key: string): BehaviorSubject<T> {
+    subjectOf<T>(key: string, value?: any): BehaviorSubject<T> {
         if (!this.hasEvent(key)) {
-            this.subjects[key] = new BehaviorSubject<T>(undefined);
+            this.subjects[key] = new BehaviorSubject<T>(value);
         }
-        return this.getSubject<T>(key);
+        return this.subjects[key];
     }
 
     removeEvent(key: string): void {
         if (this.hasEvent(key)) {
-            this.getSubject(key).complete();
+            this.subjectOf(key).complete();
         }
         delete this.subjects[key];
     }

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
-import { environment } from '../../../../environments/environment';
-import { User } from '../../models/user.model';
+import * as moment from 'moment';
 import { FacadeService } from '../../services/facade.service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-home',
@@ -11,13 +10,17 @@ import { FacadeService } from '../../services/facade.service';
 })
 export class HomeComponent implements OnInit {
 
-  env = environment.env;
+  date = moment();
   user: User;
 
-  constructor(public facade: FacadeService) { }
+  constructor(public facadeservice: FacadeService) { }
 
   ngOnInit() {
-    this.facade.userEndpointService.get().subscribe((user) => this.user = user);
+    this.facadeservice.authService.getProfile().subscribe(profile => this.user = profile);
+  }
+
+  logout() {
+    this.facadeservice.authService.logout(true);
   }
 
 }

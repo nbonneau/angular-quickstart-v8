@@ -2,21 +2,13 @@ import { Injectable, Injector } from '@angular/core';
 import { HttpService } from './http.service';
 import { OfflineService } from './offline.service';
 import { SharedEventService } from './shared.service';
-import { EndpointUserService } from '../endpoints/endpoint-user.service';
+import { AuthService } from './auth.service';
+import { SwaggerService } from './swagger.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FacadeService {
-
-  // tslint:disable-next-line: variable-name
-  private __userEndpointService: EndpointUserService;
-  get userEndpointService(): EndpointUserService {
-    if (!this.__userEndpointService) {
-      this.__userEndpointService = this.injector.get(EndpointUserService);
-    }
-    return this.__userEndpointService;
-  }
 
   // tslint:disable-next-line: variable-name
   private __httpService: HttpService;
@@ -25,6 +17,24 @@ export class FacadeService {
       this.__httpService = this.injector.get(HttpService);
     }
     return this.__httpService;
+  }
+
+  // tslint:disable-next-line: variable-name
+  private __swaggerService: SwaggerService;
+  get swaggerService(): SwaggerService {
+    if (!this.__swaggerService) {
+      this.__swaggerService = this.injector.get(SwaggerService);
+    }
+    return this.__swaggerService;
+  }
+
+  // tslint:disable-next-line: variable-name
+  private __authService: AuthService;
+  get authService(): AuthService {
+    if (!this.__authService) {
+      this.__authService = this.injector.get(AuthService);
+    }
+    return this.__authService;
   }
 
   // tslint:disable-next-line: variable-name

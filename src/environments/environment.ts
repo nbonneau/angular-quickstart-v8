@@ -1,7 +1,13 @@
 export const environment = {
-  production: false,
-  env: 'dev',
+  id: 'dev',
   api: {
-      host: ''
-  }
+      host: 'http://localhost:4200/assets/mocks',
+      version: '1.0.0',
+      swaggerPath: '/swagger.json'
+  },
+  auth: {
+
+  },
+  production: false,
+  enableNavigationTracing: false
 };

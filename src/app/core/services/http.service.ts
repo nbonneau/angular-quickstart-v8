@@ -9,7 +9,7 @@ import * as extend from 'extend';
 
 import { environment } from 'src/environments/environment';
 
-export interface WaitRequest {
+export interface SharedRequest {
     pending: boolean;
     responseSubject: Subject<any>;
     requestObservable: Observable<any>;
@@ -18,7 +18,8 @@ export interface WaitRequest {
 
 export interface HttpApiConfig {
     host?: string;
-    wait?: boolean;
+    version?: string;
+    shared?: boolean;
     retry?: {
         attemps?: number;
         delay?: number;
@@ -43,9 +44,13 @@ export class HttpService {
     static METHOD_PATCH = 'PATCH';
     static METHOD_DELETE = 'DELETE';
 
-    protected pendingRequest: { [url: string]: { [method: string]: { [params: string]: WaitRequest } } } = {};
+    protected pendingRequest: { [url: string]: { [method: string]: { [params: string]: SharedRequest } } } = {};
     protected errorSubject: Subject<HttpErrorResponse> = new Subject();
     protected errorStatusSubject: Subject<HttpErrorResponse> = new Subject();
+
+    get host(): string {
+        return this.config.host || 'http://localhost:4200/assets/mocks';
+    }
 
     constructor(@Inject(HTTP_CONFIG) public config: HttpApiConfig, protected http: HttpClient) {
         this.config = extend(true, HTTP_DEFAULT_CONFIG, config || {});
@@ -72,7 +77,7 @@ export class HttpService {
     }
 
     getFullpath(path: string, host?: string): string {
-        return (host || this.config.host || 'http://localhost:4200/assets/mocks') + path;
+        return (host || this.host) + '/' + this.config.version + path;
     }
 
     handleError(error: HttpErrorResponse): void {
@@ -93,20 +98,20 @@ export class HttpService {
 
         let req = this._getRequestObservable(method, url, params, opts.host, opts.timeout);
 
-        if (opts.wait) {
-            req = this._waitRequest(this._addWaitRequest(method, url, params, opts));
+        if (opts.shared) {
+            req = this._sharedRequest(this._addsharedRequest(method, url, params, opts));
         } else if (opts.retry) {
             req = this._retryRequest(this._getRequestObservable(method, url, params, opts.host, opts.timeout), opts);
         }
 
         return req.pipe(tap(() => {
-            if (opts.wait) {
+            if (opts.shared) {
                 delete this.pendingRequest[url][method];
             }
         }));
     }
 
-    protected _addWaitRequest(method: string, url: string, params?: any, opts?: HttpApiConfig): WaitRequest {
+    protected _addsharedRequest(method: string, url: string, params?: any, opts?: HttpApiConfig): SharedRequest {
 
         opts = extend(true, this.config, opts);
 
@@ -114,14 +119,14 @@ export class HttpService {
         this.pendingRequest[url][method] = this.pendingRequest[url][method] ? this.pendingRequest[url][method] : {};
 
         const config = this.pendingRequest[url][method][JSON.stringify(params || {})]
-            || this._createWaitRequest(method, url, params, opts);
+            || this._createSharedRequest(method, url, params, opts);
 
         this.pendingRequest[url][method][JSON.stringify(params || {})] = config;
 
         return config;
     }
 
-    protected _createWaitRequest(method: string, url: string, params?: any, opts?: HttpApiConfig): WaitRequest {
+    protected _createSharedRequest(method: string, url: string, params?: any, opts?: HttpApiConfig): SharedRequest {
 
         opts = extend(true, this.config, opts);
 
@@ -143,7 +148,7 @@ export class HttpService {
         return config;
     }
 
-    protected _waitRequest(config: WaitRequest): Observable<any> {
+    protected _sharedRequest(config: SharedRequest): Observable<any> {
         if (config.pending) {
             return new Observable(observer => {
                 config.responseObservable.subscribe((result) => {
