@@ -1,30 +1,99 @@
 # AngularQuickstartV8
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.1.
+## Project structure
 
-## Development server
+```
+app/
+├── config              // App configuration
+├── core                // Core module
+│   ├── endpoints           // Endpoint services
+│   │   └── providers       // Endpoint provider services
+│   ├── guards
+│   ├── interceptors
+│   ├── models              // App models
+│   └── services            // Global services
+├── features            // Features folder
+└── shared              // Shared module
+    └── animations          // Animations folder
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Add endpoint
 
-## Code scaffolding
+* add endpoint service into endpoints folder
+```ts
+import { Injectable } from '@angular/core';
+import { EndpointService } from '@shared/endpoint.service';
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+@Injectable({
+    providedIn: 'root'
+})
+export class CustomEndpointService extends EndpointService {
+    example(): Observable<any> {
 
-## Build
+    }
+}
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+* update `config/endpoints.ts` file
+```ts
+export interface EndpointsInterface {
+    custom: CustomEndpointService;
+}
 
-## Running unit tests
+export const ENDPOINTS: EndpointsInterface = {
+    custom: CustomEndpointService as any
+};
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+* use endpoint methods
+```ts
+this.facadeService.endpoints.custom.example().subscribe((data) => {
+    // ...
+});
+```
 
-## Running end-to-end tests
+## Add auth endpoint provider
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+* add provider service into providers folder
+```ts
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { EndpointService } from '@shared/endpoint.service';
+import { AuthProviderEndpoint } from '@core/services/auth.service';
+import { User } from '@core/models/user.model';
 
-## Further help
+@Injectable({
+    providedIn: 'root'
+})
+export class CustomUserProviderService extends EndpointService implements AuthProviderEndpoint {
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+    profile(): Observable<User> {
+        // ...
+    }
+
+    login(params?: any, id?: string): Observable<string> {
+        // ...
+    }
+}
+```
+
+* update `config/providers.ts` file
+```ts
+export const AUTH_PROVIDERS: Array<AuthProviderConfig> = [
+    // ...
+    {
+        name: 'custom',
+        class: CustomUserProviderService as any
+    }
+];
+```
+
+* use login method
+```ts
+this.facadeService.authService.login('custom').subscribe(() => {
+    // ...
+});
+```
 
 ## Animation 
 
