@@ -7,7 +7,7 @@ import * as moment from 'moment';
 
 import { environment } from '@env/environment';
 import { FacadeService } from '@core/services/facade.service';
-import { AUTH_PROVIDERS } from '@app/auth.providers';
+import { AUTH_PROVIDERS } from '@app/config/providers';
 
 @Component({
   selector: 'app-root',

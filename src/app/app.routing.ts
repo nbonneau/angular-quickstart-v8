@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
 import { environment } from '@env/environment';
 
 const routes: Routes = [{
   path: '',
-  loadChildren: () => import('./core/features/home/home.module').then(mod => mod.HomeModule)
+  loadChildren: () => import('./features/home/home.module').then(mod => mod.HomeModule)
 }, {
   path: 'login',
-  loadChildren: () => import('./core/features/login/login.module').then(mod => mod.LoginModule)
+  loadChildren: () => import('./features/login/login.module').then(mod => mod.LoginModule)
 }, {
   path: '**',
   redirectTo: '',

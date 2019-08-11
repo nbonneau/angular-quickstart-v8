@@ -1,3 +1,4 @@
+/* Default HTTP configuration, extended by environment */
 export const HTTP_DEFAULT_CONFIG = {
     shared: true,
     retry: {
@@ -12,6 +13,7 @@ export const HTTP_DEFAULT_CONFIG = {
     timeout: 60000
 };
 
+/* Default auth configuration, extended by environment */
 export const AUTH_DEFAULT_CONFIG = {
     authRedirectUrl: '/',
     unauthRedirectUrl: '/login',

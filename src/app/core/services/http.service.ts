@@ -5,7 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import * as extend from 'extend';
 
-import { HTTP_DEFAULT_CONFIG } from '@app/app.constants';
+import { HTTP_DEFAULT_CONFIG } from '@app/config/constants';
 import { environment } from '@env/environment';
 
 export interface SharedRequest {

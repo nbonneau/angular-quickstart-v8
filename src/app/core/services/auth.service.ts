@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import * as extend from 'extend';
 
 import { User } from '@core/models/user.model';
-import { AUTH_DEFAULT_CONFIG } from '@app/app.constants';
+import { AUTH_DEFAULT_CONFIG } from '@app/config/constants';
 import { environment } from '@env/environment';
 
 export const AUTH_CONFIG: InjectionToken<AuthConfig> = new InjectionToken<AuthConfig>('AuthConfig', {

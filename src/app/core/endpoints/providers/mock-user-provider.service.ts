@@ -6,6 +6,9 @@ import { SwaggerService } from '@core/services/swagger.service';
 import { AuthProviderEndpoint } from '@core/services/auth.service';
 import { User } from '@core/models/user.model';
 
+/*
+    This is a sample auth provider
+*/
 @Injectable({
     providedIn: 'root'
 })

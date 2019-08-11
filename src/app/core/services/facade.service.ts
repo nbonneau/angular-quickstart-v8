@@ -4,11 +4,14 @@ import { OfflineService } from '@core/services/offline.service';
 import { SharedEventService } from '@core/services/shared.service';
 import { AuthService } from '@core/services/auth.service';
 import { SwaggerService } from '@core/services/swagger.service';
+import { ENDPOINTS, EndpointsInterface } from '@app/config/endpoints';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FacadeService {
+
+  endpoints: EndpointsInterface = ENDPOINTS;
 
   // tslint:disable-next-line: variable-name
   private __httpService: HttpService;
@@ -55,6 +58,10 @@ export class FacadeService {
     return this.__sharedService;
   }
 
-  constructor(private injector: Injector) { }
+  constructor(private injector: Injector) {
+    Object.keys(this.endpoints).forEach(key => {
+      this.endpoints[key] = injector.get<any>(this.endpoints[key]);
+    });
+  }
 
 }
