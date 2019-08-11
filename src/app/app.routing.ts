@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { environment } from 'src/environments/environment';
-
+import { environment } from '@env/environment';
 
 const routes: Routes = [{
   path: '',
@@ -16,9 +15,9 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    enableTracing: environment.enableNavigationTracing
-  })],
+  imports: [
+    RouterModule.forRoot(routes, { enableTracing: environment.enableNavigationTracing })
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

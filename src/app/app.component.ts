@@ -1,19 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { tap, flatMap } from 'rxjs/operators';
 import { forkJoin, of, Observable } from 'rxjs';
-
-import { environment } from '../environments/environment';
-import { FacadeService } from './core/services/facade.service';
-import { AuthProviderConfig } from './core/services/auth.service';
+import { Platform } from '@angular/cdk/platform';
 
 import * as moment from 'moment';
 
-import { BasicUserProviderService } from './core/endpoints/providers/basic-user-provider.service';
-
-export const AUTH_PROVIDERS: Array<AuthProviderConfig> = [{
-  name: 'basic',
-  class: BasicUserProviderService as any
-}];
+import { environment } from '@env/environment';
+import { FacadeService } from '@core/services/facade.service';
+import { AUTH_PROVIDERS } from '@app/auth.providers';
 
 @Component({
   selector: 'app-root',
@@ -25,16 +19,25 @@ export class AppComponent implements OnInit {
   loading = true;
   initialized: boolean;
 
-  constructor(private facadeService: FacadeService) { }
+  constructor(private facadeService: FacadeService, public platform: Platform) { }
 
   ngOnInit() {
 
     this.facadeService.sharedService.on('GLOBAL_LOADING', this.loading).subscribe((loading: boolean) => this.loading = loading);
 
+    if (!environment.production) {
+      console.log('[app] initialize application');
+      // tslint:disable-next-line: no-console
+      console.time('[app] initialized in');
+    }
     this.initialize().subscribe(() => {
       if (!environment.production) {
+        // tslint:disable-next-line: no-console
+        console.timeEnd('[app] initialized in');
         this.printEnvInfos();
+        this.facadeService.authService.profileChange().subscribe((profile) => console.log('[app] new user profile:', profile));
       }
+      this.facadeService.sharedService.emit('GLOBAL_LOADING', false);
     });
   }
 
@@ -53,7 +56,6 @@ export class AppComponent implements OnInit {
     ]).pipe(
       tap(() => {
         this.initialized = true;
-        this.facadeService.sharedService.emit('GLOBAL_LOADING', false);
       }),
       flatMap(() => of(undefined))
     );
@@ -61,12 +63,22 @@ export class AppComponent implements OnInit {
 
   private printEnvInfos(): void {
     const operations = this.facadeService.swaggerService.operations;
-    console.log('[app] online state: %s', this.facadeService.offlineService.state);
-    console.log('[app] browser locale: %s', document.documentElement.lang);
+    console.log('[app] browser infos: network::%s | locale::%s | platform::%s ' + (this.platform.isBrowser ? '(browser)' : ''),
+      this.facadeService.offlineService.state,
+      document.documentElement.lang,
+      this.getPlatform()
+    );
     console.log('[app] %s environment', environment.id, environment);
     console.log('[app] swagger loaded from %s', this.facadeService.swaggerService.fullpath);
-    console.log('[app] mapped %s operation endpoint(s)', Object.keys(operations).length, operations);
-    console.log('[app] shared events', this.facadeService.sharedService.subjects);
+    console.log('[app] %s operation endpoint(s) mapped', Object.keys(operations).length, operations);
   }
 
+  private getPlatform() {
+    return Object.keys(this.platform).filter(key => ['isBrowser', '_platformId'].indexOf(key) === -1).reduce((acc, key) => {
+      if (this.platform[key]) {
+        acc = key;
+      }
+      return acc;
+    }, null);
+  }
 }

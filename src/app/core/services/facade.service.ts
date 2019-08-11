@@ -1,9 +1,9 @@
 import { Injectable, Injector } from '@angular/core';
-import { HttpService } from './http.service';
-import { OfflineService } from './offline.service';
-import { SharedEventService } from './shared.service';
-import { AuthService } from './auth.service';
-import { SwaggerService } from './swagger.service';
+import { HttpService } from '@core/services/http.service';
+import { OfflineService } from '@core/services/offline.service';
+import { SharedEventService } from '@core/services/shared.service';
+import { AuthService } from '@core/services/auth.service';
+import { SwaggerService } from '@core/services/swagger.service';
 
 @Injectable({
   providedIn: 'root'

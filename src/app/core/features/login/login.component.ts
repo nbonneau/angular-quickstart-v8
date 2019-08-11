@@ -1,24 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { FacadeService } from '../../services/facade.service';
-import { Router } from '@angular/router';
+import { PageComponent } from '@shared/page.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
-
-  constructor(private facadeService: FacadeService, private router: Router) { }
-
-  ngOnInit() {
-    this.facadeService.authService.logout();
-  }
+export class LoginComponent extends PageComponent implements OnInit {
 
   login() {
-    this.facadeService.authService.login('basic').subscribe(profile => {
-      this.router.navigate(['/']);
-    });
+    this.facadeService.authService
+      .login('mock')
+      .subscribe(() => this.router.navigate(['/']));
   }
 
 }

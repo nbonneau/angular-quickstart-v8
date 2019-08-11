@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
-import { environment } from 'src/environments/environment';
 import { of, Observable, Subject } from 'rxjs';
 import { flatMap, tap } from 'rxjs/operators';
+
+import { environment } from '@env/environment';
 
 @Injectable({
     providedIn: 'root'

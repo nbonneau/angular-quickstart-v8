@@ -23,7 +23,8 @@ import {
   MatAutocompleteModule,
   MatSlideToggleModule,
   MatExpansionModule,
-  MatTableModule
+  MatTableModule,
+  MatGridListModule
 } from '@angular/material';
 
 export const EXPORTS = [
@@ -49,6 +50,7 @@ export const EXPORTS = [
   MatFormFieldModule,
   MatInputModule,
   MatMenuModule,
+  MatGridListModule,
   MatProgressSpinnerModule
 ];
 

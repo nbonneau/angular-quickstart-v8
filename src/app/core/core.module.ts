@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { GlobalInterceptor } from './interceptors/global.interceptor';
-import { ErrorInterceptor } from './interceptors/error.interceptor';
-import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { GlobalInterceptor } from '@core/interceptors/global.interceptor';
+import { ErrorInterceptor } from '@core/interceptors/error.interceptor';
+import { AuthInterceptor } from '@core/interceptors/auth.interceptor';
 
 @NgModule({
   imports: [

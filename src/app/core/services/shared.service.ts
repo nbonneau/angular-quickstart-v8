@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { environment } from '@env/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -10,6 +11,9 @@ export class SharedEventService {
     subjects: { [key: string]: BehaviorSubject<any> } = {};
 
     emit<T>(key: string, data: T): Observable<T> {
+        if (!environment.production) {
+            console.log('[app] emit event %s =>', key, data);
+        }
         this.subjectOf<T>(key).next(data);
         return this.on<T>(key);
     }

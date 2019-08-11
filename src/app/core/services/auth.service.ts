@@ -2,13 +2,13 @@ import { Observable, of, Subject, throwError } from 'rxjs';
 import { map, catchError, flatMap, tap } from 'rxjs/operators';
 import { Injectable, InjectionToken, Inject, Injector } from '@angular/core';
 import { HttpRequest } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import * as extend from 'extend';
 
-import { User } from '../models/user.model';
-import { AUTH_DEFAULT_CONFIG } from 'src/app/app.constants';
-import { environment } from 'src/environments/environment';
-import { Router } from '@angular/router';
+import { User } from '@core/models/user.model';
+import { AUTH_DEFAULT_CONFIG } from '@app/app.constants';
+import { environment } from '@env/environment';
 
 export const AUTH_CONFIG: InjectionToken<AuthConfig> = new InjectionToken<AuthConfig>('AuthConfig', {
   providedIn: 'root',
@@ -50,6 +50,10 @@ export class AuthService {
   // tslint:disable-next-line: variable-name
   private _loggedOutSubject: Subject<void> = new Subject();
 
+  get profile(): User {
+    return this._profile;
+  }
+
   get provider(): string {
     return localStorage.getItem(this.config.authKey);
   }
@@ -74,20 +78,17 @@ export class AuthService {
     }
   }
 
-  constructor(@Inject(AUTH_CONFIG) public config: AuthConfig, private injector: Injector, private router: Router) {
-    this.config = extend(true, AUTH_DEFAULT_CONFIG, config);
-  }
+  constructor(@Inject(AUTH_CONFIG) public config: AuthConfig, private injector: Injector, private router: Router) { }
 
   initialize(config?: AuthConfig): Observable<void> {
-    return new Observable(obs => {
-      this.config = extend(true, AUTH_DEFAULT_CONFIG, config || {});
-      this.providers = this.config.providers.map(provider => ({
-        name: provider.name,
-        service: this.injector.get<any>(provider.class)
-      }));
-      obs.next();
-      obs.complete();
-    });
+
+    this.config = extend(true, AUTH_DEFAULT_CONFIG, config || {});
+    this.providers = this.config.providers.map(provider => ({
+      name: provider.name,
+      service: this.injector.get<any>(provider.class)
+    }));
+
+    return this.getProfile().pipe(flatMap(() => of(undefined)));
   }
 
   login(provider: string, params?: any): Observable<User> {
@@ -114,13 +115,15 @@ export class AuthService {
   }
 
   logout(redirect?: boolean): void {
-    this.token = null;
-    this.provider = null;
-    this._profile = null;
-    this._profileSubject.next();
-    this._loggedOutSubject.next();
-    if (redirect) {
-      this.router.navigate([this.config.unauthRedirectUrl]);
+    if (this.token || this.provider || this._profile) {
+      this.token = null;
+      this.provider = null;
+      this._profile = null;
+      this._profileSubject.next();
+      this._loggedOutSubject.next();
+      if (redirect) {
+        this.router.navigate([this.config.unauthRedirectUrl]);
+      }
     }
   }
 
@@ -133,7 +136,7 @@ export class AuthService {
     }
     const providerService = this.findProvider(provider);
     if (!providerService) {
-      return throwError(new Error('No provider found for: ' + provider));
+      return of(null);
     }
     return providerService.profile().pipe(map((profile: User) => {
 

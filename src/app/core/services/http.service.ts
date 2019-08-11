@@ -3,11 +3,10 @@ import { Observable, Subject, of, throwError, TimeoutError } from 'rxjs';
 import { tap, catchError, retryWhen, concatMap, delay, timeout } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { HTTP_DEFAULT_CONFIG } from '../../app.constants';
-
 import * as extend from 'extend';
 
-import { environment } from 'src/environments/environment';
+import { HTTP_DEFAULT_CONFIG } from '@app/app.constants';
+import { environment } from '@env/environment';
 
 export interface SharedRequest {
     pending: boolean;

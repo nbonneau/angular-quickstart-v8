@@ -6,11 +6,22 @@
     "http"
   ],
   "paths": {
-    "/user": {
+    "/user.json": {
       "get": {
         "summary": "Get current user",
         "description": "",
         "operationId": "getUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/token.json": {
+      "get": {
+        "operationId": "basicAuth",
         "consumes": [
           "application/json"
         ],
