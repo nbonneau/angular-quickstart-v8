@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { PageComponent } from '@shared/page.component';
+import { FeatureComponent } from '@shared/feature.component';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent extends PageComponent implements OnInit {
+export class LoginComponent extends FeatureComponent implements OnInit {
 
   login() {
     this.facadeService.authService

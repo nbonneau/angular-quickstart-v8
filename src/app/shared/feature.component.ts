@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { FacadeService } from '@core/services/facade.service';
 import { User } from '@core/models/user.model';
 
-export class PageComponent implements OnInit, OnDestroy {
+export class FeatureComponent implements OnInit, OnDestroy {
 
     profile: User;
 
@@ -23,7 +23,8 @@ export class PageComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit() {
-      this.profileSubscription = this.facadeService.authService.getProfile()
+      this.profileSubscription = this.facadeService.authService
+        .getProfile()
         .subscribe(profile => this.profile = profile);
     }
 

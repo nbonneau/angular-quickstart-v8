@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { SwaggerService } from '@core/services/swagger.service';
 import { AuthProviderEndpoint } from '@core/services/auth.service';
 import { User } from '@core/models/user.model';
+import { EndpointService } from '@shared/endpoint.service';
 
 /*
     This is a sample auth provider
@@ -12,9 +12,7 @@ import { User } from '@core/models/user.model';
 @Injectable({
     providedIn: 'root'
 })
-export class MockUserProviderService implements AuthProviderEndpoint {
-
-    constructor(public swagger: SwaggerService) { }
+export class MockUserProviderService extends EndpointService implements AuthProviderEndpoint {
 
     profile(): Observable<User> {
         return this.swagger.request('getUser');
