@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:10
 
 RUN apt-get update && apt-get install -y gettext-base && \
     apt-get clean && \
@@ -10,7 +10,6 @@ ADD . /usr/src/app
 
 WORKDIR /usr/src/app
 
-RUN rm -rf node_modules
+RUN npm install
 
 EXPOSE 80
-EXPOSE 4200
